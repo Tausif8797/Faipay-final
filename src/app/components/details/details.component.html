@@ -167,7 +167,7 @@
       <h3>{{ negotiation.state === 2 ? 'Validating...' : 'Calculating Match...' }}</h3>
       <div class="calculating">
         <div class="spinner"></div>
-        <p>Smart contract is processing encrypted data...</p>
+        <p>Fairpay Encryption is processing...</p>
         <p class="small">Gateway will decrypt result shortly (may take 30-60 seconds)</p>
       </div>
     </div>
@@ -199,7 +199,7 @@
 
     <!-- STATE 4 + NO MATCH -->
     <!-- <div *ngIf="negotiation.state === 4 && negotiation.matchRevealed && !negotiation.hasMatchResult" class="result-section no-match"> -->
-      <div *ngIf="negotiation.state === 4 && !negotiation.hasMatch" class="result-section no-match">
+      <div *ngIf="negotiation.state === 4 && negotiation.hasMatch" class="result-section no-match">
       <h3>✗ No Match Found</h3>
 
       <div class="no-match-msg">
@@ -230,5 +230,15 @@
     <div *ngIf="submitError" class="error-msg">
       {{ submitError }}
     </div>
+  </div>
+</div>
+
+<!-- Submitting overlay (encryption in progress) -->
+<div *ngIf="submitting" class="submitting-overlay" aria-live="assertive" role="status">
+  <div class="overlay-content">
+    <div class="loader" aria-hidden="true"></div>
+    <div class="overlay-text">Encrypting your range…</div>
+    <div class="overlay-subtext text-dim">Processing with FHE and preparing transaction</div>
+    <div class="progress" aria-hidden="true"><div class="bar"></div></div>
   </div>
 </div>

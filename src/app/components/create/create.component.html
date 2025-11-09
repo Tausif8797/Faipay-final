@@ -1,10 +1,21 @@
-<h1>whats going on</h1>
 <div class="create-container">
   <h2>Create Negotiation</h2>
 
   <!-- Not connected warning -->
   <div *ngIf="!isConnected" class="warning">
     Please connect your wallet first
+  </div>
+
+  <!-- How it works (visible regardless of connection) -->
+  <div class="info-box">
+    <strong>How it works:</strong>
+    <ol>
+      <li>You submit encrypted salary range</li>
+      <li>Candidate submits encrypted salary range</li>
+      <li>Contract finds overlap (private)</li>
+      <li>If match: reveals meeting point</li>
+      <li>If no match: no data leaked</li>
+    </ol>
   </div>
 
   <!-- Form -->
@@ -53,32 +64,38 @@
       </select>
     </div>
 
-    <div class="info-box">
-      <strong>How it works:</strong>
-      <ol>
-        <li>You submit encrypted salary range</li>
-        <li>Candidate submits encrypted salary range</li>
-        <li>Contract finds overlap (private)</li>
-        <li>If match: reveals meeting point</li>
-        <li>If no match: no data leaked</li>
-      </ol>
-    </div>
-
     <button type="submit" [disabled]="form.invalid || creating">
       {{ creating ? 'Creating...' : 'Create Negotiation' }}
     </button>
   </form>
 
-  <!-- Success message -->
-  <div *ngIf="createdId !== null" class="success">
-    <h3>✓ Negotiation Created!</h3>
-    <p>ID: {{ createdId }}</p>
-    <button (click)="viewNegotiation()">View Details</button>
-    <button (click)="reset()">Create Another</button>
+  <!-- Success message (overlay modal) -->
+  <div *ngIf="createdId !== null" class="success-overlay" aria-live="polite" role="dialog" aria-modal="true">
+    <div class="success-modal panel fade-in">
+      <div class="success-header">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <h3 class="success-title">Negotiation Created</h3>
+      </div>
+      <p class="success-id text-dim">ID: {{ createdId }}</p>
+      <div class="success-actions">
+        <button class="btn btn-primary" (click)="viewNegotiation()">View details</button>
+        <button class="btn btn-outline" (click)="reset()">Create another</button>
+      </div>
+    </div>
   </div>
 
   <!-- Error message -->
   <div *ngIf="error" class="error-box">
     {{ error }}
   </div>
+</div>
+
+<!-- Creating overlay -->
+<div *ngIf="creating" class="creating-overlay" aria-live="assertive" role="status">
+  <div class="overlay-content">
+    <div class="loader" aria-hidden="true"></div>
+    <div class="overlay-text">Creating negotiation…</div>
+    <div class="overlay-subtext text-dim">Encrypting inputs and submitting to contract</div>
+  </div>
+  <button class="sr-only" tabindex="-1" aria-hidden="true"></button>
 </div>

@@ -1,35 +1,57 @@
-<div class="app">
-  <header>
-    <div class="container">
-      <div class="logo">
-        <h1>💸 FairPay</h1>
-        <p>Blind Salary Negotiation</p>
+<div class="app-shell">
+  <!-- Top Navigation / Brand -->
+  <header class="shell-header panel fade-in">
+    <div class="shell-header-inner flex flex-stack-sm gap-md">
+      <div class="brand flex gap-sm items-center">
+        <div class="brand-icon pulse">💸</div>
+        <div class="brand-text">
+          <h1 class="brand-title">FairPay</h1>
+          <div class="brand-sub text-dim">Blind Salary Negotiation</div>
+        </div>
       </div>
-
-      <nav>
-        <a routerLink="/list" routerLinkActive="active">My Negotiations</a>
-        <a routerLink="/create" routerLinkActive="active">Create New</a>
+      <nav class="main-nav flex gap-md">
+  <a routerLink="/" routerLinkActive="active" class="nav-item" aria-label="Home" href="/">Home</a>
+        <a routerLink="/list" routerLinkActive="active" class="nav-item">My Negotiations</a>
+        <a routerLink="/create" routerLinkActive="active" class="nav-item">Create New</a>
       </nav>
-
-      <app-wallet></app-wallet>
+      <div class="wallet-wrap"><app-wallet></app-wallet></div>
     </div>
   </header>
 
-   <div *ngIf="negotiation$ | async as n">
-      <h3>{{ n.title }}</h3>
-      <p>State: {{ n.state }}</p>
-      <p>Employer: {{ n.employer }}</p>
-      <p>Candidate: {{ n.candidate }}</p>
-      <p>Meeting Point: {{ n.meetingPoint }}</p>
-      <p *ngIf="n.lastError">⚠️ Error: {{ n.lastError }}</p>
+  <!-- Context Panel (negotiation preview) -->
+  <section class="context-bar fade-in" *ngIf="negotiation$ | async as n">
+    <div class="panel negotiation-preview">
+      <div class="preview-header flex gap-md items-center">
+        <h3 class="preview-title">{{ n.title }}</h3>
+        <span class="badge" [ngClass]="'badge-' + (n.state === 'Completed' ? 'success' : (n.lastError ? 'danger' : 'warning'))">{{ n.state }}</span>
+      </div>
+      <div class="preview-grid">
+        <div class="preview-field">
+          <label>Employer</label>
+          <div class="value">{{ n.employer }}</div>
+        </div>
+        <div class="preview-field">
+          <label>Candidate</label>
+          <div class="value">{{ n.candidate }}</div>
+        </div>
+        <div class="preview-field">
+          <label>Meeting Point</label>
+          <div class="value">{{ n.meetingPoint }}</div>
+        </div>
+      </div>
+      <div class="preview-error" *ngIf="n.lastError">⚠️ <span>{{ n.lastError }}</span></div>
     </div>
+  </section>
 
-  <main>
-    <router-outlet></router-outlet>
+  <!-- Routed Views -->
+  <main class="main-area fade-in">
+    <div class="view-container">
+      <router-outlet></router-outlet>
+    </div>
   </main>
 
-  <footer>
-    <p>Powered by Zama FHE • Sepolia Testnet</p>
+  <footer class="app-footer">
+    Powered by Zama FHE • Sepolia Testnet
   </footer>
 </div>
 
