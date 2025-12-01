@@ -5,18 +5,7 @@ import { Negotiation } from '../../models/negotiation';
 import { environment } from '../../environments/environment';
 import abi from '../../assets/FairPay.json'
 
-const ABI = [
-  'function createNegotiation(address _candidate, string _title, uint256 _deadlineDuration) returns (uint256)',
-  'function submitEmployerRange(uint256 negotiationId, tuple(uint256 chainId, bytes32 handle) encryptedMin, tuple(uint256 chainId, bytes32 handle) encryptedMax, bytes inputProof)',
-  'function submitCandidateRange(uint256 negotiationId, bytes encryptedMin, bytes encryptedMax, bytes inputProof)',
-  'function getNegotiationSummary(uint256 negotiationId) view returns (tuple(uint256 negotiationId, address employer, address candidate, string title, uint8 state, uint256 createdAt, uint256 deadline, bool hasMatchResult, bool matchRevealed, uint64 meetingPoint))',
-  'function getUserNegotiations(address user) view returns (uint256[])',
-  'function getMatchResult(uint256 negotiationId) view returns (bool hasMatch, uint64 meetingPoint)',
-  'function isExpired(uint256 negotiationId) view returns (bool)',
-  'function getTotalNegotiations() view returns (uint256)',
-  'event NegotiationCreated(uint256 indexed negotiationId, address indexed employer, address indexed candidate, string title, uint256 deadline)',
-  'event MatchRevealed(uint256 indexed negotiationId, bool hasMatch, uint64 meetingPoint)'
-];
+
 
 @Injectable({
   providedIn: 'root'
@@ -185,4 +174,5 @@ export class ContractService {
       this.contract.removeAllListeners();
     }
   }
+  
 }
