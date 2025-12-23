@@ -5,7 +5,7 @@ import { catchError, concatMap, first, map, timeout } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 const SDK_CDN_URL =
-  'https://cdn.zama.ai/relayer-sdk-js/0.2.0/relayer-sdk-js.umd.cjs';
+  'https://cdn.zama.org/relayer-sdk-js/0.3.0-5/relayer-sdk-js.umd.cjs';
 // const SDK_CDN_URL =
 // '/fairpay-app/src/assets/relayer-sdk-js.umd.js';
 
@@ -98,30 +98,43 @@ export class FheService1 {
 
     // 3. Create the instance
     // this.instance = await window.relayerSDK.createInstance(config);
+    console.log(
+      window.relayerSDK.SepoliaConfig,
+      '##############fhevm sepolia config'
+    );
+    // this.instance = await window.relayerSDK.createInstance({
+    //   // ACL_CONTRACT_ADDRESS (FHEVM Host chain)
+    //   aclContractAddress: '0x687820221192C5B662b25367F70076A37bc79b6c',
+    //   // KMS_VERIFIER_CONTRACT_ADDRESS (FHEVM Host chain)
+    //   kmsContractAddress: '0x1364cBBf2cDF5032C47d8226a6f6FBD2AFCDacAC',
+    //   // INPUT_VERIFIER_CONTRACT_ADDRESS (FHEVM Host chain)
+    //   inputVerifierContractAddress:
+    //     '0xbc91f3daD1A5F19F8390c400196e58073B6a0BC4',
+    //   // DECRYPTION_ADDRESS (Gateway chain)
+    //   verifyingContractAddressDecryption:
+    //     '0xb6E160B1ff80D67Bfe90A85eE06Ce0A2613607D1',
+    //   // INPUT_VERIFICATION_ADDRESS (Gateway chain)
+    //   verifyingContractAddressInputVerification:
+    //     '0x7048C39f048125eDa9d678AEbaDfB22F7900a29F',
+    //   // FHEVM Host chain id
+    //   chainId: 11155111,
+    //   // Gateway chain id
+    //   gatewayChainId: 55815,
+    //   // Optional RPC provider to host chain
+    //   // network: "https://eth-sepolia.public.blastapi.io",
+    //   network: window.ethereum,
+    //   // Relayer URL
+    //   relayerUrl: 'https://relayer.testnet.zama.cloud',
 
+    // });
+    console.log("my sepolia config")
+    console.log({...window.relayerSDK.SepoliaConfig})
+    console.log("mid")
+    console.log("end")
     this.instance = await window.relayerSDK.createInstance({
-      // ACL_CONTRACT_ADDRESS (FHEVM Host chain)
-      aclContractAddress: '0x687820221192C5B662b25367F70076A37bc79b6c',
-      // KMS_VERIFIER_CONTRACT_ADDRESS (FHEVM Host chain)
-      kmsContractAddress: '0x1364cBBf2cDF5032C47d8226a6f6FBD2AFCDacAC',
-      // INPUT_VERIFIER_CONTRACT_ADDRESS (FHEVM Host chain)
-      inputVerifierContractAddress:
-        '0xbc91f3daD1A5F19F8390c400196e58073B6a0BC4',
-      // DECRYPTION_ADDRESS (Gateway chain)
-      verifyingContractAddressDecryption:
-        '0xb6E160B1ff80D67Bfe90A85eE06Ce0A2613607D1',
-      // INPUT_VERIFICATION_ADDRESS (Gateway chain)
-      verifyingContractAddressInputVerification:
-        '0x7048C39f048125eDa9d678AEbaDfB22F7900a29F',
-      // FHEVM Host chain id
-      chainId: 11155111,
-      // Gateway chain id
-      gatewayChainId: 55815,
-      // Optional RPC provider to host chain
-      // network: "https://eth-sepolia.public.blastapi.io",
-      network: window.ethereum,
-      // Relayer URL
-      relayerUrl: 'https://relayer.testnet.zama.cloud',
+      ...window.relayerSDK.SepoliaConfig,
+      network: window.ethereum, // override/add the network field
+      gatewayUrl: "https://gateway.testnet.zama.ai", // NEW in v0.9
     });
 
     // this.instance = await window.relayerSDK.createInstance(
@@ -177,160 +190,7 @@ export class FheService1 {
     });
   }
 
-  // fhe.servicecopy.ts
-  // private async loadRelayerSDK(): Promise<void> {
-  //   if ((window as any).relayerSDK?.initSDK) return;
-
-  //   const res = await fetch('assets/relayer-sdk-js.umd.js');   // ← ONLY THIS LINE
-  //   if (!res.ok) throw new Error('SDK file not found');
-
-  //   const blobUrl = URL.createObjectURL(
-  //     new Blob([await res.text()], { type: 'application/javascript' })
-  //   );
-
-  //   await new Promise<void>((ok, no) => {
-  //     const s = document.createElement('script');
-  //     s.src = blobUrl;
-  //     s.onload = () => {
-  //       const poll = setInterval(() => {
-  //         if ((window as any).relayerSDK?.initSDK) {
-  //           clearInterval(poll);
-  //           URL.revokeObjectURL(blobUrl);
-  //           console.log('relayerSDK ready!');
-  //           ok();
-  //         }
-  //       }, 50);
-  //       setTimeout(() => (clearInterval(poll), no('timeout')), 8000);
-  //     };
-  //     s.onerror = () => no('script error');
-  //     document.head.appendChild(s);
-  //   });
-  // }
-
-  //   private async loadRelayerSDK(): Promise<void> {
-  //   if ((window as any).relayerSDK?.initSDK) return;
-
-  //   const res = await fetch('relayer-sdk-js.umd.cjs');
-  //   if (!res.ok) throw new Error('Failed to fetch SDK');
-  //   const text = await res.text();
-
-  //   const blobUrl = URL.createObjectURL(
-  //     new Blob([text], { type: 'application/javascript' })
-  //   );
-
-  //   await new Promise<void>((resolve, reject) => {
-  //     const script = document.createElement('script');
-  //     script.src = blobUrl;
-
-  //     const timer = setTimeout(() => reject(new Error('SDK load timeout')), 10000);
-  //     const check = setInterval(() => {
-  //       if ((window as any).relayerSDK?.initSDK) {
-  //         clearInterval(check);
-  //         clearTimeout(timer);
-  //         URL.revokeObjectURL(blobUrl);
-  //         resolve();
-  //       }
-  //     }, 50);
-
-  //     script.onload = () => console.log('SDK script loaded');
-  //     script.onerror = () => {
-  //       clearInterval(check);
-  //       clearTimeout(timer);
-  //       URL.revokeObjectURL(blobUrl);
-  //       reject(new Error('Script load failed'));
-  //     };
-
-  //     document.head.appendChild(script);
-  //   });
-  // }
-
-  /** ------------------------------------------------------------------ */
-  /** 3. Build createInstance config (Sepolia + cached key)             */
-  /** ------------------------------------------------------------------ */
-  // private async buildInstanceConfig(
-  //   provider: ethers.Eip1193Provider
-  // ): Promise<FhevmInstanceConfig> {
-  //   const relayer = (window as any).relayerSDK as {
-  //     SepoliaConfig: FhevmInstanceConfig;
-  //   };
-
-  //   const aclAddress = relayer.SepoliaConfig.aclContractAddress;
-  //   if (!ethers.isAddress(aclAddress)) {
-  //     throw new Error(`Invalid ACL address: ${aclAddress}`);
-  //   }
-
-  //   // Try to read cached key from localStorage
-  //   const cached = await this.getCachedPublicKey(aclAddress);
-
-  //   return {
-  //     ...relayer.SepoliaConfig,
-  //     network: provider,
-  //     publicKey: cached?.publicKey ?? undefined,
-  //     publicParams: cached?.publicParams ?? undefined,
-  //   };
-  // }
-
-  /** ------------------------------------------------------------------ */
-  /** 4. Cache public key (localStorage)                                 */
-  /** ------------------------------------------------------------------ */
-  // private async cachePublicKey(
-  //   aclAddress: string,
-  //   instance: FhevmInstance
-  // ): Promise<void> {
-  //   const key = instance.getPublicKey();
-  //   const params = instance.getPublicParams(2048); // 2048 = default
-  //   localStorage.setItem(
-  //     `fhevm-pub-${aclAddress}`,
-  //     JSON.stringify({
-  //       publicKey: Array.from(key), // Uint8Array → number[]
-  //       publicParams: Array.from(params),
-  //     })
-  //   );
-  // }
-
-  // private async getCachedPublicKey(
-  //   aclAddress: string
-  // ): Promise<{ publicKey: Uint8Array; publicParams: Uint8Array } | null> {
-  //   const raw = localStorage.getItem(`fhevm-pub-${aclAddress}`);
-  //   if (!raw) return null;
-  //   try {
-  //     const obj = JSON.parse(raw);
-  //     return {
-  //       publicKey: new Uint8Array(obj.publicKey),
-  //       publicParams: new Uint8Array(obj.publicParams),
-  //     };
-  //   } catch {
-  //     return null;
-  //   }
-  // }
-
-  /** ------------------------------------------------------------------ */
-  /** 5. Public encryption API (32-bit) – same as React version          */
-  /** ------------------------------------------------------------------ */
-  // async encryptNumber(
-  //   value: number,
-  //   contractAddress: string,
-  //   userAddress: string
-  // ): Promise<EncryptedResult> {
-  //   if (!this.instance) throw new Error('FHEVM not initialized');
-
-  //   const input = this.instance.createEncryptedInput(
-  //     contractAddress,
-  //     userAddress
-  //   );
-  //   input.add32(value);
-  //   const encrypted = await input.encrypt();
-
-  //   const toHex = (arr: Uint8Array): `0x${string}` =>
-  //     `0x${Array.from(arr)
-  //       .map((b) => b.toString(16).padStart(2, '0'))
-  //       .join('')}`;
-
-  //   return {
-  //     encryptedData: toHex(encrypted.handles[0]),
-  //     inputProof: toHex(encrypted.inputProof),
-  //   };
-  // }
+ 
 
   /** ------------------------------------------------------------------ */
   /** 6. Convenience helpers                                            */
@@ -344,62 +204,7 @@ export class FheService1 {
     return this.instance;
   }
 
-  // async encryptRange(
-  //   minSalary: number,
-  //   maxSalary: number,
-  //   userAddress: string,
-  //   contractAddress: string
-  // ): Promise<{
-  //   encryptedMin: any;
-  //   encryptedMax: any;
-  //   proof: any;
-  // }> {
-  //   if (!this.instance) {
-  //     throw new Error('FHE not initialized1');
-  //   }
-
-  //   if (minSalary > maxSalary) {
-  //     throw new Error('Min must be <= max');
-  //   }
-
-  //   try {
-  //     const input = this.instance.createEncryptedInput(
-  //       contractAddress,
-  //       userAddress
-  //     );
-  //     input.add64(minSalary);
-  //     input.add64(maxSalary);
-  //     console.log('input before encrypt:', input);
-
-  //     const encrypted = await input.encrypt();
-
-  //     console.log(encrypted.proof, 'input proof');
-
-  //     const toHex = (data: Uint8Array | string): string => {
-  //       if (typeof data === 'string') return data;
-  //       return (
-  //         '0x' +
-  //         Array.from(data)
-  //           .map((byte) => byte.toString(16).padStart(2, '0'))
-  //           .join('')
-  //       );
-  //     };
-
-  //     return {
-  //       encryptedMin: encrypted.handles[0],
-  //       encryptedMax: encrypted.handles[1],
-  //       proof: encrypted.inputProof,
-  //     };
-  //     //  return {
-  //     //   encryptedMin: toHex(encrypted.handles[0]),
-  //     //   encryptedMax: toHex(encrypted.handles[1]),
-  //     //   proof: toHex(encrypted.inputProof),
-  //     // };
-  //   } catch (error) {
-  //     console.error('Encryption failed:', error);
-  //     throw error;
-  //   }
-  // }
+ 
 
   async encryptRange(
     minSalary: number,
@@ -514,6 +319,8 @@ export class FheService1 {
     }
   }
 
+ 
+
   async diagnoseContract(contractAddress: string): Promise<void> {
     console.log('=== Contract Diagnosis ===');
 
@@ -557,51 +364,251 @@ export class FheService1 {
     }
   }
 
-  // async encryptRange(
-  //   minSalary: number,
-  //   maxSalary: number,
-  //   userAddress: string,
-  //   contractAddress: string
-  // ): Promise<{
-  //   encryptedMin: `0x${string}`;
-  //   encryptedMax: `0x${string}`;
-  //   proof: `0x${string}`;
-  // }> {
-  //   if (!this.instance) {
-  //     throw new Error('FHE not initialized');
-  //   }
+  async decryptAndGetProof(
+    handles: string[],
+    requestId?: number
+  ): Promise<{
+    plaintexts: (boolean | bigint)[];
+    proof: `0x${string}`;
+  }> {
+    if (!this.instance) throw new Error('FHEVM instance not initialized');
 
-  //   if (minSalary > maxSalary) {
-  //     throw new Error('Min must be <= max');
-  //   }
+    // Use a proper unique requestId (Date.now() is fine)
+    const rid = requestId ?? Date.now();
 
-  //   try {
-  //     const input = this.instance.createEncryptedInput(
-  //       contractAddress,
-  //       userAddress
-  //     );
+    // The relayer SDK supports batch decryption via .decrypt()
+    // It automatically registers the requestId internally
+    const plaintexts: (boolean | bigint)[] = [];
 
-  //     // Add both 64-bit values
-  //     input.add64(minSalary);
-  //     input.add64(maxSalary);
+    for (const handle of handles) {
+      // handle is bytes32 string like "0xabc123..."
+      const pt = await this.instance.decrypt(handle);
+      plaintexts.push(pt);
+    }
 
-  //     // Encrypt
-  //     const encrypted = await input.encrypt();
+    // Get the re-encryption proof for this requestId
+    // This is the same proof expected by FHE.checkSignatures()
+    const proof = this.instance.getReencryptionProof(rid);
 
-  //     // Convert Uint8Array → hex string
-  //     const toHex = (arr: Uint8Array): `0x${string}` =>
-  //       `0x${Array.from(arr)
-  //         .map((b) => b.toString(16).padStart(2, '0'))
-  //         .join('')}`;
+    return { plaintexts, proof: proof as `0x${string}` };
+  }
 
-  //     return {
-  //       encryptedMin: toHex(encrypted.handles[0]),
-  //       encryptedMax: toHex(encrypted.handles[1]),
-  //       proof: toHex(encrypted.inputProof),
-  //     };
-  //   } catch (error) {
-  //     console.error('Encryption failed:', error);
-  //     throw error;
-  //   }
-  // }
+  
+
+
+
+async publicDecryptHandles(
+  handles: string[],
+  contractAddress: string
+): Promise<{
+  cleartexts: any[];
+  proof: string;
+  requestId: number;
+}> {
+  if (!this.instance) throw new Error('FHEVM instance not initialized');
+  
+  console.log('Starting public decryption:', { handles, contractAddress });
+  
+  try {
+    const requestId = Date.now();
+    
+    // Call publicDecrypt on the instance
+    // This contacts the Zama Relayer/Gateway
+    const result = await this.instance.publicDecrypt(handles, contractAddress);
+    
+    console.log('Decryption result:', result);
+    
+    // Extract the data - format may vary
+    const cleartexts = Array.isArray(result) ? result : (result.plaintexts || result.cleartexts || []);
+    const proof = result.proof || result.signature || '0x';
+    
+    return {
+      cleartexts,
+      proof,
+      requestId
+    };
+  } catch (error: any) {
+    console.error('Public decryption error:', error);
+    throw error;
+  }
+}
+
+
+
+
+// Optional: Add a simpler method for testing
+
+
+
+
+
+// Replace your decryptMatchResults and testDecryption methods with these:
+
+
+
+
+async decryptMatchResults(
+  hasMatchHandle: string,
+  meetingPointHandle: string,
+  requestId: number
+): Promise<{
+  hasMatch: boolean;
+  meetingPoint: bigint;
+  proof: string;
+}> {
+  if (!this.instance) throw new Error('FHEVM instance not initialized');
+  
+  console.log('=== Starting Decryption (v0.9 API) ===');
+  console.log('Handles:', { hasMatchHandle, meetingPointHandle });
+  console.log('RequestId:', requestId);
+  
+  try {
+    // Call publicDecrypt with both handles
+    console.log('Calling publicDecrypt with both handles...');
+    
+    const result = await this.instance.publicDecrypt([
+      hasMatchHandle,
+      meetingPointHandle
+    ]);
+    
+    console.log('✅ PublicDecrypt successful!');
+    console.log('Result type:', typeof result);
+    console.log('Result is array:', Array.isArray(result));
+    
+    // Log result carefully (avoiding BigInt serialization issue)
+    if (result && typeof result === 'object') {
+      console.log('Result keys:', Object.keys(result));
+    }
+    
+    let hasMatch: boolean;
+    let meetingPoint: bigint;
+    let proof: string = '0x';
+    
+    // The result structure from publicDecrypt v0.9:
+    // {
+    //   clearValues: { [handle: string]: boolean | bigint },
+    //   abiEncodedClearValues: string,
+    //   decryptionProof: string
+    // }
+    
+    if (result.clearValues) {
+      console.log('Found clearValues in result');
+      
+      // Extract values from clearValues object
+      // The keys are the handles we passed in
+      const values = Object.values(result.clearValues);
+      
+      console.log('Number of decrypted values:', values.length);
+      
+      if (values.length >= 2) {
+        hasMatch = Boolean(values[0]);
+        meetingPoint = BigInt(values[1] as string | number | bigint | boolean);
+        proof = result.decryptionProof || '0x';
+        
+        console.log('✅ Decryption successful!');
+        console.log('  Has match:', hasMatch);
+        console.log('  Meeting point:', meetingPoint.toString()); // Convert to string for logging
+        console.log('  Proof length:', proof.length);
+        
+        return { hasMatch, meetingPoint, proof };
+      } else {
+        throw new Error(`Expected 2 values, got ${values.length}`);
+      }
+    }
+    
+    // Fallback: try to access by handle directly
+    if (result[hasMatchHandle] !== undefined && result[meetingPointHandle] !== undefined) {
+      console.log('Found values by handle key');
+      hasMatch = Boolean(result[hasMatchHandle]);
+      meetingPoint = BigInt(result[meetingPointHandle]);
+      proof = result.decryptionProof || result.proof || '0x';
+      
+      console.log('✅ Decryption successful!');
+      console.log('  Has match:', hasMatch);
+      console.log('  Meeting point:', meetingPoint.toString());
+      console.log('  Proof length:', proof.length);
+      
+      return { hasMatch, meetingPoint, proof };
+    }
+    
+    // If we get here, the structure is unexpected
+    console.error('Unexpected result structure');
+    console.error('Available properties:', Object.keys(result));
+    throw new Error('Could not extract values from decryption result');
+    
+  } catch (error: any) {
+    console.error('=== Decryption Failed ===');
+    console.error('Error message:', error.message);
+    
+    // Don't try to stringify - it might contain BigInt
+    if (error.stack) {
+      console.error('Error stack:', error.stack.split('\n').slice(0, 3).join('\n'));
+    }
+    
+    // Check for "not ready" errors
+    if (error.message?.includes('not ready') || 
+        error.message?.includes('not available') ||
+        error.message?.includes('not decryptable') ||
+        error.message?.includes('pending')) {
+      throw new Error('Decryption not ready yet. Please wait a moment and try again.');
+    }
+    
+    throw new Error(`Decryption failed: ${error.message}`);
+  }
+}
+
+// Fixed test method too
+async testDecryption(handle: string): Promise<any> {
+  if (!this.instance) throw new Error('FHEVM instance not initialized');
+  
+  console.log('=== Testing Decryption ===');
+  console.log('Testing handle:', handle);
+  
+  try {
+    const result = await this.instance.publicDecrypt([handle]);
+    
+    console.log('✓ Test decryption successful!');
+    console.log('  Result type:', typeof result);
+    
+    // Don't stringify - might contain BigInt
+    if (result.clearValues) {
+      const value = Object.values(result.clearValues)[0];
+      console.log('  Decrypted value:', typeof value === 'bigint' ? value.toString() : value);
+      return value;
+    }
+    
+    return result;
+  } catch (error: any) {
+    console.error('✗ Test failed:', error.message);
+    throw error;
+  }
+}
+
+
+// Alternative: Test with contract address
+async testDecryptionWithContract(handle: string, contractAddress: string): Promise<any> {
+  if (!this.instance) throw new Error('FHEVM instance not initialized');
+  
+  console.log('=== Testing Decryption With Contract ===');
+  console.log('Handle:', handle);
+  console.log('Contract:', contractAddress);
+  
+  try {
+    // Some SDK versions might require the contract address
+    const result = await this.instance.publicDecrypt([handle], contractAddress);
+    
+    console.log('✓ Result:', result);
+    return result;
+  } catch (error: any) {
+    console.error('✗ Failed:', error.message);
+    
+    // Try without contract address
+    console.log('Retrying without contract address...');
+    const result = await this.instance.publicDecrypt([handle]);
+    console.log('✓ Result (no contract):', result);
+    return result;
+  }
+}
+
+
 }
