@@ -6,19 +6,6 @@ import { environment } from '../../environments/environment';
 import abi from '../../assets/FairPay.json'
 import { FheService1 } from './fhe.servicecopy';
 
-const ABI = [
-  'function createNegotiation(address _candidate, string _title, uint256 _deadlineDuration) returns (uint256)',
-  'function submitEmployerRange(uint256 negotiationId, tuple(uint256 chainId, bytes32 handle) encryptedMin, tuple(uint256 chainId, bytes32 handle) encryptedMax, bytes inputProof)',
-  'function submitCandidateRange(uint256 negotiationId, bytes encryptedMin, bytes encryptedMax, bytes inputProof)',
-  'function getNegotiationSummary(uint256 negotiationId) view returns (tuple(uint256 negotiationId, address employer, address candidate, string title, uint8 state, uint256 createdAt, uint256 deadline, bool hasMatchResult, bool matchRevealed, uint64 meetingPoint))',
-  'function getUserNegotiations(address user) view returns (uint256[])',
-  'function getMatchResult(uint256 negotiationId) view returns (bool hasMatch, uint64 meetingPoint)',
-  'function isExpired(uint256 negotiationId) view returns (bool)',
-  'function getTotalNegotiations() view returns (uint256)',
-  'event NegotiationCreated(uint256 indexed negotiationId, address indexed employer, address indexed candidate, string title, uint256 deadline)',
-  'event MatchRevealed(uint256 indexed negotiationId, bool hasMatch, uint64 meetingPoint)'
-];
-
 @Injectable({
   providedIn: 'root'
 })
@@ -37,11 +24,6 @@ export class ContractService {
     throw new Error('Install MetaMask');
   }
 
-    //   const provider = new ethers.JsonRpcProvider(environment.localProvider ? environment.localRpcUrl : rpcUrl);
-
-    // this.contract = new ethers.Contract(contractAddress, ABI, provider);
-    // console.log('Contract initialized at', contractAddress);
-    // console.log("provider:", provider);
   }
 
   private getSignedContract(): ethers.Contract {
@@ -58,11 +40,6 @@ export class ContractService {
     const contract = this.getSignedContract();
     const deadlineSeconds = deadlineHours * 3600;
 
-    // const tx = await contract.createNegotiation(
-    //   candidate,
-    //   title,
-    //   deadlineSeconds
-    // );
       const tx = await contract['createNegotiation'](
         candidate,
         title,
@@ -210,22 +187,16 @@ const tx = await contract["submitCandidateRange"](
 
 async revealMatch(
   negotiationId: number,
-  requestId: number,
   hasMatch: boolean,
   meetingPoint: bigint | number,
-  cleartexts: string,
-  proof: string
 ): Promise<string> {
   const contract = this.getSignedContract();
   
   console.log('=== Calling revealMatch ===');
   console.log('Parameters:', {
     negotiationId,
-    requestId,
     hasMatch,
     meetingPoint: meetingPoint.toString(),
-    cleartextsLength: cleartexts.length,
-    proofLength: proof.length
   });
   
   // Ensure meetingPoint is a proper uint64
@@ -234,16 +205,13 @@ async revealMatch(
     : BigInt(meetingPoint);
   
   // Ensure proof is properly formatted
-  const formattedProof = proof.startsWith('0x') ? proof : `0x${proof}`;
+  // const formattedProof = proof.startsWith('0x') ? proof : `0x${proof}`;
   
   try {
     const tx = await contract['revealMatch'](
       negotiationId,
-      requestId,
       hasMatch,
       meetingPointUint64,
-      cleartexts,
-      formattedProof,
       {
         gasLimit: 500000
       }
@@ -301,20 +269,6 @@ async revealMatch(
 }
 
 
-// async getMatchHandles(negotiationId: number): Promise<{
-//   hasMatchHandle: string;
-//   meetingPointHandle: string;
-// }> {
-//   if (!this.contract) throw new Error('Contract not initialized');
-  
-//   // Access the struct directly from storage
-//   const negotiation = await this.contract['negotiations'](negotiationId);
-  
-//   return {
-//     hasMatchHandle: negotiation.hasMatch,
-//     meetingPointHandle: negotiation.meetingPoint
-//   };
-// }
 
 async getMatchHandles(negotiationId: number): Promise<{
   hasMatchHandle: string;
@@ -378,7 +332,6 @@ async getMatchHandlesWithStatus(negotiationId: number): Promise<{
 
   async calculateMatch(negotiationId: number): Promise<string> {
   const contract = this.getSignedContract();
-  // const tx = await contract["calculateMatch"](negotiationId);
   const tx = await contract["calculateMatch"](negotiationId, {
     gasLimit: 3000000
 });

@@ -8,19 +8,6 @@
 
   <!-- Connected -->
   <div *ngIf="state.connected" class="wallet-info">
-    <!-- <div class="network">
-      <span [class.wrong]="!isCorrectNetwork">
-        {{ isCorrectNetwork ? '✓ Sepolia' : '⚠ Wrong Network' }}
-      </span>
-      <button *ngIf="!isCorrectNetwork" (click)="switchNetwork()">
-        Switch
-      </button>
-    </div> -->
-
-    <!-- <div class="balance">
-      Balance: {{ formatBalance(state.balance) }} ETH
-    </div> -->
-
     <div class="address">
       {{ formatAddress(state.address!) }}
     </div>

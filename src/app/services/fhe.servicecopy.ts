@@ -6,8 +6,6 @@ import { environment } from '../../environments/environment';
 
 const SDK_CDN_URL =
   'https://cdn.zama.org/relayer-sdk-js/0.3.0-5/relayer-sdk-js.umd.cjs';
-// const SDK_CDN_URL =
-// '/fairpay-app/src/assets/relayer-sdk-js.umd.js';
 
 declare const window: any;
 
@@ -47,28 +45,6 @@ export class FheService1 {
       await window.relayerSDK.initSDK();
       window.relayerSDK.__initialized__ = true;
     }
-    console.log('relayerSDK initialized');
-
-    // 3. Build config (Sepolia defaults + cached key + provider)
-    // const config = await this.buildInstanceConfig(provider);
-
-    // 4. Create the per-session instance
-    console.log('before');
-    console.log(window.ethereum);
-
-    //         const config = { ...window.relayerSDK.SepoliaConfig };
-
-    // // 2. Override ONLY the network with your wallet
-    // config.network = window.ethereum;   // ← THIS IS THE MAGIC LINE
-
-    // const config = {
-    //   ...window.relayerSDK.SepoliaConfig,
-    //   network: window.ethereum,
-    //   // Ensure these are set from SepoliaConfig
-    //   // aclContractAddress: window.relayerSDK.SepoliaConfig.aclContractAddress,
-    //   // kmsVerifierAddress: window.relayerSDK.SepoliaConfig.kmsVerifierAddress,
-    //   // gatewayUrl: window.relayerSDK.SepoliaConfig.gatewayUrl,
-    // };
 
     const config = {
       ...window.relayerSDK.SepoliaConfig,
@@ -102,50 +78,13 @@ export class FheService1 {
       window.relayerSDK.SepoliaConfig,
       '##############fhevm sepolia config'
     );
-    // this.instance = await window.relayerSDK.createInstance({
-    //   // ACL_CONTRACT_ADDRESS (FHEVM Host chain)
-    //   aclContractAddress: '0x687820221192C5B662b25367F70076A37bc79b6c',
-    //   // KMS_VERIFIER_CONTRACT_ADDRESS (FHEVM Host chain)
-    //   kmsContractAddress: '0x1364cBBf2cDF5032C47d8226a6f6FBD2AFCDacAC',
-    //   // INPUT_VERIFIER_CONTRACT_ADDRESS (FHEVM Host chain)
-    //   inputVerifierContractAddress:
-    //     '0xbc91f3daD1A5F19F8390c400196e58073B6a0BC4',
-    //   // DECRYPTION_ADDRESS (Gateway chain)
-    //   verifyingContractAddressDecryption:
-    //     '0xb6E160B1ff80D67Bfe90A85eE06Ce0A2613607D1',
-    //   // INPUT_VERIFICATION_ADDRESS (Gateway chain)
-    //   verifyingContractAddressInputVerification:
-    //     '0x7048C39f048125eDa9d678AEbaDfB22F7900a29F',
-    //   // FHEVM Host chain id
-    //   chainId: 11155111,
-    //   // Gateway chain id
-    //   gatewayChainId: 55815,
-    //   // Optional RPC provider to host chain
-    //   // network: "https://eth-sepolia.public.blastapi.io",
-    //   network: window.ethereum,
-    //   // Relayer URL
-    //   relayerUrl: 'https://relayer.testnet.zama.cloud',
-
-    // });
-    console.log("my sepolia config")
-    console.log({...window.relayerSDK.SepoliaConfig})
-    console.log("mid")
-    console.log("end")
+  
+   
     this.instance = await window.relayerSDK.createInstance({
       ...window.relayerSDK.SepoliaConfig,
       network: window.ethereum, // override/add the network field
       gatewayUrl: "https://gateway.testnet.zama.ai", // NEW in v0.9
     });
-
-    // this.instance = await window.relayerSDK.createInstance(
-    //   ...window.relayerSDK.SepoliaConfig,
-
-    // );
-
-    console.log(this.instance, 'fhevm 1 instance');
-
-    // 5. Cache the new public key for next page load
-    // await this.cachePublicKey(config.aclContractAddress, this.instance);
 
     this.initialized = true;
     console.log('FHEVM instance ready');

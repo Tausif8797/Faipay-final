@@ -12,31 +12,3 @@ export const routes: Routes = [
   { path: 'details/:id', component: DetailsComponent },
   { path: '**', redirectTo: '' }
 ];
-
-// import { NegotiationListComponent } from './components/negotiation-list/negotiation-list.component';
-// import { CreateNegotiationComponent } from './components/create-negotiation/create-negotiation.component';
-// import { NegotiationDetailsComponent } from './components/negotiation-details/negotiation-details.component';
-
-// export const routes: Routes = [
-//   {
-//     path: '',
-//     redirectTo: '/my-negotiations',
-//     pathMatch: 'full'
-//   },
-//   {
-//     path: 'my-negotiations',
-//     component: NegotiationListComponent
-//   },
-//   {
-//     path: 'create',
-//     component: CreateNegotiationComponent
-//   },
-//   {
-//     path: 'negotiation/:id',
-//     component: NegotiationDetailsComponent
-//   },
-//   {
-//     path: '**',
-//     redirectTo: '/my-negotiations'
-//   }
-// ];

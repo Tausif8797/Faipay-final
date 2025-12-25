@@ -394,11 +394,11 @@ private async pollForDecryptionAndReveal(): Promise<void> {
       // Call revealMatch with decrypted values
       const revealTx = await this.contractService.revealMatch(
         this.negotiationId,
-        requestId,
+        // requestId,
         decrypted.hasMatch,
         decrypted.meetingPoint,
-        cleartexts,
-        decrypted.proof
+        // cleartexts,
+        // decrypted.proof
       );
       
       console.log('✓ Match revealed! tx:', revealTx);
@@ -484,11 +484,11 @@ async revealResult(): Promise<void> {
     
     const revealTx = await this.contractService.revealMatch(
       this.negotiationId,
-      requestId,
+      // requestId,
       decrypted.hasMatch,
       decrypted.meetingPoint,
-      cleartexts,
-      decrypted.proof
+      // cleartexts,
+      // decrypted.proof
     );
     
     console.log('✅ Match revealed! Tx:', revealTx);
